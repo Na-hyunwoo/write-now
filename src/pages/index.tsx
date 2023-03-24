@@ -1,9 +1,22 @@
 import Head from 'next/head'
-import { Inter } from 'next/font/google'
+import { ChangeEvent, useState } from 'react';
 
-const inter = Inter({ subsets: ['latin'] })
+import { generateChat } from '@/api/chat';
 
 export default function Home() {
+
+  const [value, setValue] = useState<string>('');
+  const [result, setResult] = useState<string>('');
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+  }
+
+  const handleClickButton = async() => {
+    const response = await generateChat(value);
+    setResult(response);
+  }
+
   return (
     <>
       <Head>
@@ -13,7 +26,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-
+        <input onChange={handleChange} />
+        <button type="submit" onClick={handleClickButton}>입력</button>
+        <textarea defaultValue={result} />
       </main>
     </>
   )
