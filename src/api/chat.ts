@@ -16,5 +16,6 @@ export const generateChat = async(input: string): Promise<string> => {
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
     },
   });
+
   return response.data.choices[0].message.content;
 }

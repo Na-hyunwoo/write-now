@@ -1,20 +1,30 @@
 import Head from 'next/head'
 import { ChangeEvent, useState } from 'react';
 
-import { generateChat } from '@/api/chat';
+import { useGenerateChat } from '@/hooks/useGenerateChat';
 
 export default function Home() {
 
   const [value, setValue] = useState<string>('');
-  const [result, setResult] = useState<string>('');
+  const [result, setResult] = useState<string | undefined>('');
+  const { error, isLoading, mutate } = useGenerateChat(value);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   }
 
   const handleClickButton = async() => {
-    const response = await generateChat(value);
-    setResult(response);
+    const res = await mutate('generateChat');
+
+    setResult(res);
+  }
+
+  if (error) {
+    return <>에러가 발생하였습니다.</>
+  }
+
+  if (isLoading) {
+    return <>로딩중...</>
   }
 
   return (
