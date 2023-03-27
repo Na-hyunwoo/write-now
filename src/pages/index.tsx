@@ -1,13 +1,18 @@
 import Head from 'next/head'
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, KeyboardEvent } from 'react';
 
 import { useGenerateChat } from '@/hooks/useGenerateChat';
+import { Button, Input, Layout, Space, Typography } from 'antd';
+
+const { Header, Content } = Layout;
+const { Title } = Typography;
+const { TextArea } = Input;
 
 export default function Home() {
 
   const [value, setValue] = useState<string>('');
   const [result, setResult] = useState<string | undefined>('');
-  const { error, isLoading, mutate } = useGenerateChat(value);
+  const { error, isValidating, mutate } = useGenerateChat(value);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -19,12 +24,14 @@ export default function Home() {
     setResult(res);
   }
 
-  if (error) {
-    return <>에러가 발생하였습니다.</>
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleClickButton();
+    }
   }
 
-  if (isLoading) {
-    return <>로딩중...</>
+  if (error) {
+    return <>에러가 발생하였습니다.</>
   }
 
   return (
@@ -35,11 +42,26 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <input onChange={handleChange} />
-        <button type="submit" onClick={handleClickButton}>입력</button>
-        <textarea defaultValue={result} />
-      </main>
+      <Layout style={{display: 'flex'}}>
+        <Header style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Title style={{color: '#FFF', margin: '0px'}}>Write Now</Title>
+        </Header>
+        <Layout style={{height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'row'}}>
+          <Content style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '20px'}}>
+            <Content>
+              <Title level={3}>주제를 입력해 주세요.</Title>
+              <Input size='large' onChange={handleChange} onKeyDown={handleKeyDown}/>
+            </Content>
+              <Button size='large' onClick={handleClickButton} loading={isValidating}>입력</Button>
+          </Content>
+          <Content style={{height: '100%', padding: '20px'}}>
+            <TextArea value={result} style={{resize: 'none', height: 'calc(100% - 50px)', marginBottom: '10px'}}/>
+            <Layout style={{flexDirection: 'row-reverse'}}>
+              <Button size='large'>본론으로</Button>
+            </Layout>
+          </Content>
+        </Layout>
+      </Layout> 
     </>
   )
 }
