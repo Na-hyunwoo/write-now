@@ -1,37 +1,22 @@
 import Head from 'next/head'
-import { ChangeEvent, useState, KeyboardEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
+import { Layout, Typography } from 'antd';
 
-import { useGenerateChat } from '@/hooks/useGenerateChat';
-import { Button, Input, Layout, Space, Typography } from 'antd';
+import { Introduction, MainSubject } from '@/components';
 
-const { Header, Content } = Layout;
+const { Header } = Layout;
 const { Title } = Typography;
-const { TextArea } = Input;
 
 export default function Home() {
+  const [step, setStep] = useState<string>('introduction');
+  const [introduction, setIntroduction] = useState<string | undefined>('');
 
-  const [value, setValue] = useState<string>('');
-  const [result, setResult] = useState<string | undefined>('');
-  const { error, isValidating, mutate } = useGenerateChat(value);
+  const handleClickNext = (step: string) => {
+    setStep(step);
+  };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  }
-
-  const handleClickButton = async() => {
-    const res = await mutate('generateChat');
-
-    setResult(res);
-  }
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleClickButton();
-    }
-  }
-
-  if (error) {
-    return <>에러가 발생하였습니다.</>
+  const handleChangeIntroduction = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setIntroduction(event.target.value);
   }
 
   return (
@@ -46,21 +31,20 @@ export default function Home() {
         <Header style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <Title style={{color: '#FFF', margin: '0px'}}>Write Now</Title>
         </Header>
-        <Layout style={{height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'row'}}>
-          <Content style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '20px'}}>
-            <Content>
-              <Title level={3}>주제를 입력해 주세요.</Title>
-              <Input size='large' onChange={handleChange} onKeyDown={handleKeyDown}/>
-            </Content>
-              <Button size='large' onClick={handleClickButton} loading={isValidating}>입력</Button>
-          </Content>
-          <Content style={{height: '100%', padding: '20px'}}>
-            <TextArea value={result} style={{resize: 'none', height: 'calc(100% - 50px)', marginBottom: '10px'}}/>
-            <Layout style={{flexDirection: 'row-reverse'}}>
-              <Button size='large'>본론으로</Button>
-            </Layout>
-          </Content>
-        </Layout>
+        {step === 'introduction' && (
+          <Introduction 
+            introduction={introduction}
+            setIntroduction={setIntroduction}
+            onChangeIntroduction={handleChangeIntroduction}
+            onClickNext={handleClickNext}
+          />
+        )}
+        {step === 'mainSubject' && (
+          <MainSubject 
+            introduction={introduction}
+            onChangeIntroduction={handleChangeIntroduction}
+          />
+        )}
       </Layout> 
     </>
   )
