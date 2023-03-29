@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from 'react';
 import { Layout, Typography } from 'antd';
 
 import { Introduction, MainSubject } from '@/components';
+import Conclusion from '@/components/Conclusion';
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -10,6 +11,8 @@ const { Title } = Typography;
 export default function Home() {
   const [step, setStep] = useState<string>('introduction');
   const [introduction, setIntroduction] = useState<string | undefined>('');
+  const [mainSubject, setMainSubject] = useState<string>();
+  const [conclusion, setConclusion] = useState<string>();
 
   const handleClickNext = (step: string) => {
     setStep(step);
@@ -17,7 +20,11 @@ export default function Home() {
 
   const handleChangeIntroduction = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setIntroduction(event.target.value);
-  }
+  };
+
+  const handleChangeMainSubject = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setMainSubject(event.target.value);
+  };
 
   return (
     <>
@@ -42,8 +49,25 @@ export default function Home() {
         {step === 'mainSubject' && (
           <MainSubject 
             introduction={introduction}
+            mainSubject={mainSubject}
+            setMainSubject={setMainSubject}
             onChangeIntroduction={handleChangeIntroduction}
+            onChangeMainSubject={handleChangeMainSubject}
+            onClickNext={handleClickNext}
           />
+        )}
+        {step === 'conclusion' && (
+          <Conclusion 
+            mainSubject={mainSubject}
+            conclusion={conclusion}
+            setConclusion={setConclusion}
+            onChangeMainSubject={handleChangeMainSubject}
+            onClickNext={handleClickNext}
+          />
+        )}
+        {/* editor로 slate 사용하기 ? */}
+        {step === 'editor' && (
+          <>editor</>
         )}
       </Layout> 
     </>

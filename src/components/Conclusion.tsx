@@ -1,35 +1,33 @@
 import { useGenerateChat } from "@/hooks/useGenerateChat";
-import { MAKE_MAIN_SUBJECT } from "@/utils/constants";
-import { Button, Input, Layout, Typography } from "antd";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { Layout, Typography, Input, Button } from "antd";
+import { MAKE_CONCLUSION } from "@/utils/constants";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
+const { Title } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
-const { Title } = Typography;
 
 interface Props {
-  introduction: string | undefined;
   mainSubject: string | undefined;
-  setMainSubject: Dispatch<SetStateAction<string | undefined>>;
-  onChangeIntroduction: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  conclusion: string | undefined;
+  setConclusion: Dispatch<SetStateAction<string | undefined>>;
   onChangeMainSubject: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onClickNext: (step: string) => void;
 }
 
-export default function MainSubject({ 
-  introduction,
+export default function Conclusion({
   mainSubject,
-  setMainSubject,
-  onChangeIntroduction,
+  conclusion,
+  setConclusion,
   onChangeMainSubject,
-  onClickNext
+  onClickNext,
 }: Props) {
-  const { error, isValidating, mutate } = useGenerateChat(introduction + MAKE_MAIN_SUBJECT);
+  const { error, isValidating, mutate } = useGenerateChat(mainSubject + MAKE_CONCLUSION);
 
-  const handleClickMakeMainSubject = async () => {
+  const handleClickMakeConclusion = async () => {
     const res = await mutate('generateChat');
 
-    setMainSubject(res);
+    setConclusion(res);
   }
 
   if (error) {
@@ -39,26 +37,25 @@ export default function MainSubject({
   return (
     <Layout style={{height: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'row'}}>
       <Content style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '20px'}}>
-        <Title level={3}>서론을 입력해 주세요.</Title>
+        <Title level={3}>본론을 입력해 주세요.</Title>
         <TextArea 
           style={{resize: 'none', height: 'calc(100% - 10px)', marginBottom: '10px'}} 
-          value={introduction} 
-          onChange={onChangeIntroduction}
+          value={mainSubject} 
+          onChange={onChangeMainSubject}
         />
         <Button 
           size='large' 
-          onClick={handleClickMakeMainSubject}
+          onClick={handleClickMakeConclusion}
           loading={isValidating}
-        >본론 생성</Button>
+        >결론 생성</Button>
       </Content>
       <Content style={{padding: '20px', height: '100%'}}>
         <TextArea  
           style={{resize: 'none', height: 'calc(100% - 50px)', marginBottom: '10px'}}
-          onChange={onChangeMainSubject}
-          value={mainSubject}
+          value={conclusion}
         />
         <Content style={{display: 'flex', flexDirection: 'row-reverse'}}>
-          <Button size='large' onClick={() => onClickNext('conclusion')}>다음으로</Button>
+          <Button size='large' onClick={() => onClickNext('editor')}>다음으로</Button>
         </Content>
       </Content>
     </Layout>
