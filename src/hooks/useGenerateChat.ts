@@ -6,5 +6,7 @@ export const useGenerateChat = (value: string) => {
   return useSWR<string>('generateChat', () => generateChat(value), {
     revalidateOnMount: false,
     revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
   });
 }

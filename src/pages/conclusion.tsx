@@ -1,29 +1,20 @@
 import { useGenerateChat } from "@/hooks/useGenerateChat";
 import { Layout, Typography, Input, Button } from "antd";
 import { MAKE_CONCLUSION } from "@/utils/constants";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
+import { useConclusion, useMainSubject, useSubject } from "@/stores/editor";
+import Link from "next/link";
 
 const { Title } = Typography;
 const { TextArea } = Input;
 const { Content } = Layout;
 
-interface Props {
-  mainSubject?: string;
-  conclusion?: string;
-  setConclusion: Dispatch<SetStateAction<string | undefined>>;
-  onChangeMainSubject: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  onClickNext: (step: string) => void;
-}
+export default function Conclusion() {
+  const { subject } = useSubject();
+  const { mainSubject, handleChangeMainSubjectChange } = useMainSubject();
+  const { conclusion, setConclusion } = useConclusion();
 
-export default function Conclusion({
-  mainSubject,
-  conclusion,
-  setConclusion,
-  onChangeMainSubject,
-  onClickNext,
-}: Props) {
-  const { error, isValidating, mutate } = useGenerateChat(mainSubject + MAKE_CONCLUSION);
+  const { error, isValidating, mutate } = useGenerateChat(subject + MAKE_CONCLUSION);
   const router = useRouter();
 
   const handleClickMakeConclusion = async () => {
@@ -45,7 +36,7 @@ export default function Conclusion({
         <TextArea 
           style={{resize: 'none', height: 'calc(100% - 10px)', marginBottom: '10px'}} 
           value={mainSubject} 
-          onChange={onChangeMainSubject}
+          onChange={handleChangeMainSubjectChange}
         />
         <Button 
           size='large' 
@@ -59,7 +50,9 @@ export default function Conclusion({
           value={conclusion}
         />
         <Content style={{display: 'flex', flexDirection: 'row-reverse'}}>
-          <Button size='large' onClick={() => onClickNext('editor')}>다음으로</Button>
+          <Link href="/editor">
+            <Button size='large'>다음으로</Button>
+          </Link>
         </Content>
       </Content>
     </Layout>

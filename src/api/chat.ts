@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const api_url = process.env.NEXT_PUBLIC_API_URL as string;
 
+// 두번 호출되는거 수정 필요
 export const generateChat = async(input: string): Promise<string> => {
   const url = api_url + '/chat/completions';
 
@@ -18,6 +19,8 @@ export const generateChat = async(input: string): Promise<string> => {
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
     },
   });
+
+  console.log(input, response.data.choices[0].message.content);
 
   return response.data.choices[0].message.content;
 }

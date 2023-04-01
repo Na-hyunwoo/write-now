@@ -1,31 +1,20 @@
 import { useGenerateChat } from "@/hooks/useGenerateChat";
+import { useIntroduction, useMainSubject, useSubject } from "@/stores/editor";
 import { MAKE_MAIN_SUBJECT } from "@/utils/constants";
 import { Button, Input, Layout, Typography } from "antd";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 const { TextArea } = Input;
 const { Content } = Layout;
 const { Title } = Typography;
 
-interface Props {
-  introduction?: string;
-  mainSubject?: string;
-  setMainSubject: Dispatch<SetStateAction<string | undefined>>;
-  onChangeIntroduction: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  onChangeMainSubject: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  onClickNext: (step: string) => void;
-}
+export default function MainSubject() {
+  const { subject } = useSubject();
+  const { introduction, handleChangeIntroduction } = useIntroduction();
+  const { mainSubject, setMainSubject, handleChangeMainSubjectChange } = useMainSubject();
 
-export default function MainSubject({ 
-  introduction,
-  mainSubject,
-  setMainSubject,
-  onChangeIntroduction,
-  onChangeMainSubject,
-  onClickNext
-}: Props) {
-  const { error, isValidating, mutate } = useGenerateChat(introduction + MAKE_MAIN_SUBJECT);
+  const { error, isValidating, mutate } = useGenerateChat(subject + MAKE_MAIN_SUBJECT);
   const router = useRouter();
 
   const handleClickMakeMainSubject = async () => {
@@ -47,7 +36,7 @@ export default function MainSubject({
         <TextArea 
           style={{resize: 'none', height: 'calc(100% - 10px)', marginBottom: '10px'}} 
           value={introduction} 
-          onChange={onChangeIntroduction}
+          onChange={handleChangeIntroduction}
         />
         <Button 
           size='large' 
@@ -58,11 +47,13 @@ export default function MainSubject({
       <Content style={{padding: '20px', height: '100%'}}>
         <TextArea  
           style={{resize: 'none', height: 'calc(100% - 50px)', marginBottom: '10px'}}
-          onChange={onChangeMainSubject}
+          onChange={handleChangeMainSubjectChange}
           value={mainSubject}
         />
         <Content style={{display: 'flex', flexDirection: 'row-reverse'}}>
-          <Button size='large' onClick={() => onClickNext('conclusion')}>다음으로</Button>
+          <Link href="/conclusion">
+            <Button size='large'>다음으로</Button>
+          </Link>
         </Content>
       </Content>
     </Layout>
