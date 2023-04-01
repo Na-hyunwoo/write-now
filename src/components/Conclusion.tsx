@@ -34,6 +34,7 @@ export default function Conclusion({
 
   if (error) {
     router.push('/error');
+    console.log(error);
     return <></>;
   }
 
