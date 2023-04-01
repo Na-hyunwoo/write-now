@@ -37,7 +37,7 @@ export default function Home() {
         <Header style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <Title style={{color: '#FFF', margin: '0px'}}>Write Now</Title>
         </Header>
-        {/* {step === 'introduction' && (
+        {step === 'introduction' && (
           <Introduction 
             introduction={introduction}
             setIntroduction={setIntroduction}
@@ -63,7 +63,7 @@ export default function Home() {
             onChangeMainSubject={handleChangeMainSubject}
             onClickNext={handleClickNext}
           />
-        )} */}
+        )}
         {true && (
           <Editor 
             introduction={introduction}

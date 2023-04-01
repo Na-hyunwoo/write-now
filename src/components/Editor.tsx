@@ -1,17 +1,36 @@
-import { useGenerateImg } from "@/hooks/useGenerateImg"
-import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import 'react-quill/dist/quill.snow.css';
+
+import { useGenerateImg } from "@/hooks/useGenerateImg"
+
+const ReactQuill = dynamic(() => import ('react-quill'), {
+  ssr: false
+})
 
 interface Props {
   introduction?: string;
 }
 
-{/* editor로 slate 사용하기 ? */}
 export default function Editor({ introduction }: Props) {
-  const { data = "", isLoading, error } = useGenerateImg("초콜릿 효능");
   const router = useRouter();
+  const { data = "", isLoading, error } = useGenerateImg("초콜릿 효능");
 
-  if (isLoading) {
+  const [value, setValue] = useState<string>();
+
+  const handleChange = (value: string) => {
+    setValue(value);
+  }
+
+  useEffect(() => {
+    if (data) {
+      setValue(`<p><Image width={256} height={256} src=${data} alt="초콜릿 효능" /></p>`);
+    }
+  }, [data])
+
+  if (isLoading || !data) {
     return <>로딩중...</>;
   }
 
@@ -23,8 +42,7 @@ export default function Editor({ introduction }: Props) {
 
   return(
     <div>
-      <Image width={256} height={256} src={data} alt="초콜릿 효능" />
+      <ReactQuill theme="snow" value={value} onChange={handleChange} />
     </div>
-
   )
 }
