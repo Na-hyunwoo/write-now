@@ -3,10 +3,9 @@ import axios from 'axios';
 const api_url = process.env.NEXT_PUBLIC_API_URL as string;
 
 // 두번 호출되는거 수정 필요
-export const generateChat = async(input: string): Promise<string> => {
-  const url = api_url + '/chat/completions';
-
-  const response = await axios.post(url, {
+export const generateChat = async(url: string, input: string): Promise<string> => {
+  const _url = api_url + url;
+  const response = await axios.post(_url, {
     "model": "gpt-3.5-turbo",
     "messages": [
       {
@@ -25,10 +24,9 @@ export const generateChat = async(input: string): Promise<string> => {
   return response.data.choices[0].message.content;
 }
 
-export const generateImg = async(input?: string): Promise<string> => {
-  const url = api_url + '/images/generations'
-
-  const response = await axios.post(url, {
+export const generateImg = async(url: string, input?: string): Promise<string> => {
+  const _url = api_url + url;
+  const response = await axios.post(_url, {
     "prompt": input,
     "n": 1,
     "size": "256x256"
