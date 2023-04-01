@@ -9,8 +9,8 @@ const { TextArea } = Input;
 const { Content } = Layout;
 
 interface Props {
-  mainSubject: string | undefined;
-  conclusion: string | undefined;
+  mainSubject?: string;
+  conclusion?: string;
   setConclusion: Dispatch<SetStateAction<string | undefined>>;
   onChangeMainSubject: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onClickNext: (step: string) => void;

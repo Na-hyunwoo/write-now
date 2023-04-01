@@ -10,7 +10,7 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 interface Props {
-  introduction: string | undefined;
+  introduction?: string;
   setIntroduction: Dispatch<SetStateAction<string | undefined>>;
   onChangeIntroduction: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onClickNext: (step: string) => void;

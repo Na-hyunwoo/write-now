@@ -9,8 +9,8 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 interface Props {
-  introduction: string | undefined;
-  mainSubject: string | undefined;
+  introduction?: string;
+  mainSubject?: string;
   setMainSubject: Dispatch<SetStateAction<string | undefined>>;
   onChangeIntroduction: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onChangeMainSubject: (event: ChangeEvent<HTMLTextAreaElement>) => void;

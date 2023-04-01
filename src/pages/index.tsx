@@ -2,8 +2,7 @@ import Head from 'next/head'
 import { ChangeEvent, useState } from 'react';
 import { Layout, Typography } from 'antd';
 
-import { Introduction, MainSubject } from '@/components';
-import Conclusion from '@/components/Conclusion';
+import { Introduction, MainSubject, Conclusion, Editor } from '@/components';
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -38,7 +37,7 @@ export default function Home() {
         <Header style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
           <Title style={{color: '#FFF', margin: '0px'}}>Write Now</Title>
         </Header>
-        {step === 'introduction' && (
+        {/* {step === 'introduction' && (
           <Introduction 
             introduction={introduction}
             setIntroduction={setIntroduction}
@@ -64,10 +63,11 @@ export default function Home() {
             onChangeMainSubject={handleChangeMainSubject}
             onClickNext={handleClickNext}
           />
-        )}
-        {/* editor로 slate 사용하기 ? */}
-        {step === 'editor' && (
-          <>editor</>
+        )} */}
+        {true && (
+          <Editor 
+            introduction={introduction}
+          />
         )}
       </Layout> 
     </>
