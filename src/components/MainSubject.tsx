@@ -36,7 +36,7 @@ export default function MainSubject({
 
   if (error) {
     router.push('/error');
-    return;
+    return <></>;
   }
 
   return (

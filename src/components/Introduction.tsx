@@ -44,7 +44,7 @@ export default function Introduction({
 
   if (error) {
     router.push('/error');
-    return;
+    return <></>;
   }
 
   return (
