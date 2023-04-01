@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const api_url = process.env.NEXT_PUBLIC_API_URL as string;
 
-// 두번 호출되는거 수정 필요
 export const generateChat = async(url: string, input: string): Promise<string> => {
   const _url = api_url + url;
   const response = await axios.post(_url, {
@@ -36,6 +35,8 @@ export const generateImg = async(url: string, input?: string): Promise<string> =
       'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
     }
   })
+
+  console.log(input);
 
   return response.data.data[0].url;
 }
