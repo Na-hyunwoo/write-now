@@ -18,7 +18,7 @@ export default function MainSubject() {
   const router = useRouter();
 
   const handleClickMakeMainSubject = async () => {
-    const res = await mutate('generateChat');
+    const res = await mutate();
 
     setMainSubject(res);
   }

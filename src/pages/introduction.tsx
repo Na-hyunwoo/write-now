@@ -19,7 +19,7 @@ export default function Introduction() {
   const router = useRouter();
 
   const handleClickButton = async() => {
-    const res = await mutate('generateChat');
+    const res = await mutate();
 
     setIntroduction(res);
   }

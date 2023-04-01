@@ -1,10 +1,7 @@
-import useSWR from 'swr';
+import useSWRImmutable from 'swr';
 
 import { generateImg } from '@/api/chat';
 
 export const useGenerateImg = (value?: string) => {
-  return useSWR<string>('generateImg', () => generateImg(value), {
-    revalidateOnFocus: false,
-    revalidateIfStale: false,
-  });
+  return useSWRImmutable<string>('generateImg', () => generateImg(value));
 }

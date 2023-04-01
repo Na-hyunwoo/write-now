@@ -1,12 +1,12 @@
-import useSWR from 'swr';
+import uswSWRMutation from 'swr';
 
 import { generateChat } from "@/api/chat"
 
 export const useGenerateChat = (value: string) => {
-  return useSWR<string>('generateChat', () => generateChat(value), {
+  return uswSWRMutation<string>('generateChat', () => generateChat(value), {
     revalidateOnMount: false,
     revalidateIfStale: false,
     revalidateOnFocus: false,
-    revalidateOnReconnect: false,
+    revalidateOnReconnect: false
   });
 }

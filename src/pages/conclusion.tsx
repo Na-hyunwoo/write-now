@@ -18,7 +18,7 @@ export default function Conclusion() {
   const router = useRouter();
 
   const handleClickMakeConclusion = async () => {
-    const res = await mutate('generateChat');
+    const res = await mutate();
 
     setConclusion(res);
   }
