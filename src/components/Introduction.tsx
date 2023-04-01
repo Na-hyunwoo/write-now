@@ -3,6 +3,7 @@ import { ChangeEvent, useState, KeyboardEvent, SetStateAction, Dispatch } from '
 import { useGenerateChat } from '@/hooks/useGenerateChat';
 import { Button, Input, Layout, Typography } from 'antd';
 import { MAKE_INTRODUCTION } from '@/utils/constants';
+import { useRouter } from 'next/router';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -23,6 +24,7 @@ export default function Introduction({
 }: Props) {
   const [subject, setSubject] = useState<string>('');
   const { error, isValidating, mutate } = useGenerateChat(subject + MAKE_INTRODUCTION);
+  const router = useRouter();
 
   const handleChangeSubject = (event: ChangeEvent<HTMLInputElement>) => {
     setSubject(event.target.value);
@@ -41,7 +43,8 @@ export default function Introduction({
   }
 
   if (error) {
-    return <>에러가 발생하였습니다.</>;
+    router.push('/error');
+    return;
   }
 
   return (

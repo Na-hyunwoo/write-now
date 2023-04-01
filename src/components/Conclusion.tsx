@@ -2,6 +2,7 @@ import { useGenerateChat } from "@/hooks/useGenerateChat";
 import { Layout, Typography, Input, Button } from "antd";
 import { MAKE_CONCLUSION } from "@/utils/constants";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/router";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -23,6 +24,7 @@ export default function Conclusion({
   onClickNext,
 }: Props) {
   const { error, isValidating, mutate } = useGenerateChat(mainSubject + MAKE_CONCLUSION);
+  const router = useRouter();
 
   const handleClickMakeConclusion = async () => {
     const res = await mutate('generateChat');
@@ -31,7 +33,8 @@ export default function Conclusion({
   }
 
   if (error) {
-    return <>에러가 발생하였습니다.</>;
+    router.push('/error');
+    return;
   }
 
   return (

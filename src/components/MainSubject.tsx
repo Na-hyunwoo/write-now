@@ -1,6 +1,7 @@
 import { useGenerateChat } from "@/hooks/useGenerateChat";
 import { MAKE_MAIN_SUBJECT } from "@/utils/constants";
 import { Button, Input, Layout, Typography } from "antd";
+import { useRouter } from "next/router";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 const { TextArea } = Input;
@@ -25,6 +26,7 @@ export default function MainSubject({
   onClickNext
 }: Props) {
   const { error, isValidating, mutate } = useGenerateChat(introduction + MAKE_MAIN_SUBJECT);
+  const router = useRouter();
 
   const handleClickMakeMainSubject = async () => {
     const res = await mutate('generateChat');
@@ -33,7 +35,8 @@ export default function MainSubject({
   }
 
   if (error) {
-    return <>에러가 발생하였습니다.</>;
+    router.push('/error');
+    return;
   }
 
   return (
