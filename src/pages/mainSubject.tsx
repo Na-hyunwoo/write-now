@@ -52,7 +52,7 @@ export default function MainSubject() {
         />
         <Content style={{display: 'flex', flexDirection: 'row-reverse'}}>
           <Link href="/conclusion">
-            <Button size='large'>다음으로</Button>
+            <Button size='large' disabled={!mainSubject}>다음으로</Button>
           </Link>
         </Content>
       </Content>
