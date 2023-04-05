@@ -16,7 +16,6 @@ export default function Editor() {
   const { introduction } = useIntroduction();
   const { mainSubject } = useMainSubject();
   const { conclusion } = useConclusion();
-  // 해당 api가 한글을 잘 몰라서, 영어로 번역한 후에 api 요청할 필요가 있습니다.
   const { data = "", isLoading, error } = useGenerateImg(subject);
 
   const [value, setValue] = useState<string>();
