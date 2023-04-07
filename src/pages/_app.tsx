@@ -2,11 +2,14 @@ import { Layout, Typography } from 'antd';
 import type { AppProps } from 'next/app'
 import Head from 'next/head';
 import 'style.css';
+import dotenv from 'dotenv';
 
 const { Header } = Layout;
 const { Title } = Typography;
 
 export default function App({ Component, pageProps }: AppProps) {
+  dotenv.config();
+
   return (
     <div>
       <Head>
