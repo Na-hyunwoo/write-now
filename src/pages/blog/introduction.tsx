@@ -52,7 +52,7 @@ export default function Introduction() {
           onChange={handleChangeIntroduction} 
         />
         <Layout style={{flexDirection: 'row-reverse'}}>
-          <Link href="/mainSubject">
+          <Link href="/blog/mainSubject">
             <Button size='large' disabled={!introduction}>다음으로</Button>
           </Link>
         </Layout>
