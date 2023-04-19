@@ -25,11 +25,10 @@ export default function Home() {
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [radioValue, setRadioValue] = useState<string>("성격 장단점");
   const [information, setInformation] = useState<IInformation>({
     personality: ["외향형(E)", "감각형(S)", "논리적(T)", "판단형(J)"],
     position: "",
-    question: radioValue,
+    question: "",
     school: "",
     major: "",
     experience: ""
@@ -128,7 +127,10 @@ export default function Home() {
   };
 
   const handleChangeRadio = (event: RadioChangeEvent) => {
-    setRadioValue(event.target.value);
+    setInformation((prev) => ({
+      ...prev,
+      question: event.target.value,
+    }))
     setIsModalOpen(false);
   };
 
@@ -212,7 +214,7 @@ export default function Home() {
           <Divider />
           <Input placeholder="프론트엔드 엔지니어" onChange={handleChangePosition} />
           <div style={{paddingTop: "10px"}} />
-          <Input placeholder="항목 선택" onClick={handleInputClick} value={radioValue}/>
+          <Input placeholder="항목 선택" onClick={handleInputClick} value={information.question}/>
           <Modal 
             width="1000px"
             open={isModalOpen} 
@@ -227,7 +229,7 @@ export default function Home() {
             footer={[]} 
             onCancel={handleCancelModal}
           >
-            <Radio.Group style={{width: "100%"}} onChange={handleChangeRadio} value={radioValue}>
+            <Radio.Group style={{width: "100%"}} onChange={handleChangeRadio} value={information.question}>
               <Row style={{padding: "10px 0px"}}>
                 <Col span={12}>
                   <Radio value="성격 장단점">
@@ -355,8 +357,10 @@ export default function Home() {
         </Button>
       </Row>
       <div style={{paddingTop: "100px"}} />
-      <Row>
-        <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+      <Row style={{display: "flex", justifyContent: "center"}}>
+        <Col span={20}>
+          <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+        </Col>
       </Row>
     </>
   )
