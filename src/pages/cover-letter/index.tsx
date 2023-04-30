@@ -21,7 +21,7 @@ interface IInformation {
   experience: string,
 }
 
-export default function Home() {
+export default function CoverLetters() {
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -154,7 +154,6 @@ export default function Home() {
     router.push('/error');
     return;
   }
-
 
   return (
     <>

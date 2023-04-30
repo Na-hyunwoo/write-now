@@ -4,7 +4,7 @@ import { useGenerateChat } from '@/hooks/useGenerateChat';
 import { Button, Input, Layout, Typography } from 'antd';
 import { MAKE_INTRODUCTION } from '@/utils/constants';
 import { useRouter } from 'next/router';
-import { useIntroduction, useSubject } from '@/stores/editor';
+import { useIntroduction, useSubject } from '@/stores/blog';
 import Link from 'next/link';
 
 const { Content } = Layout;

@@ -2,7 +2,7 @@ import { useGenerateChat } from "@/hooks/useGenerateChat";
 import { Layout, Typography, Input, Button } from "antd";
 import { MAKE_CONCLUSION } from "@/utils/constants";
 import { useRouter } from "next/router";
-import { useConclusion, useMainSubject, useSubject } from "@/stores/editor";
+import { useConclusion, useMainSubject, useSubject } from "@/stores/blog";
 import Link from "next/link";
 
 const { Title } = Typography;

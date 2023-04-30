@@ -1,5 +1,5 @@
 import { useGenerateChat } from "@/hooks/useGenerateChat";
-import { useIntroduction, useMainSubject, useSubject } from "@/stores/editor";
+import { useIntroduction, useMainSubject, useSubject } from "@/stores/blog";
 import { MAKE_MAIN_SUBJECT } from "@/utils/constants";
 import { Button, Input, Layout, Typography } from "antd";
 import Link from "next/link";

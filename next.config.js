@@ -4,15 +4,15 @@ const nextConfig = {
   images: {
     domains: ['oaidalleapiprodscus.blob.core.windows.net'],
   },
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/',
-  //       destination: '/blog/introduction',
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/admission-letter/first-question',
+        permanent: false,
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig

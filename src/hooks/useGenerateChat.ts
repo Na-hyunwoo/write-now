@@ -1,11 +1,11 @@
-import uswSWRMutation from 'swr';
+import useSWRMutation from 'swr';
 
 import { generateChat } from "@/api/chat"
 
 export const useGenerateChat = (value: string) => {
   const endpoint = '/chat/completions';
 
-  return uswSWRMutation<string>(endpoint, () => generateChat(endpoint, value), {
+  return useSWRMutation<string>(endpoint, () => generateChat(endpoint, value), {
     revalidateOnMount: false,
     revalidateIfStale: false,
     revalidateOnFocus: false,

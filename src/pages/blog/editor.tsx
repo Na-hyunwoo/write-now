@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import 'react-quill/dist/quill.snow.css';
 
 import { useGenerateImg } from "@/hooks/useGenerateImg"
-import { useConclusion, useIntroduction, useMainSubject, useSubject } from "@/stores/editor";
+import { useConclusion, useIntroduction, useMainSubject, useSubject } from "@/stores/blog";
 
 const ReactQuill = dynamic(() => import ('react-quill'), {
   ssr: false
