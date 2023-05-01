@@ -34,8 +34,8 @@ export default function FirstQuestion() {
     const { first_question: { department, experience, learning } } = value;
     const chat = `
       내가 대학교에 진학하기 위해서 자기소개서를 작성해야 돼. 질문은 다음과 같아. 
-      고등학교 재학 기간 중 자신의 진로와 관련하려 어떤 노력을 해왔는지 본인에게 의미 있는 학습 경험고 교내 활동을 중심으로 기술해 주시기 바랍니다. 
-      내가 지원하려는 학과는 ${department}이고, 진로와 관련되 학습 경험 혹은 교내 활동은 ${experience}와 같은 것들이 있어. 
+      고등학교 재학 기간 중 자신의 진로와 관련하려 어떤 노력을 해왔는지 본인에게 의미 있는 학습 경험과 교내 활동을 중심으로 기술해 주시기 바랍니다. 
+      내가 지원하려는 학과는 ${department}이고, 진로와 관련된 학습 경험 혹은 교내 활동은 ${experience}와 같은 것들이 있어. 
       그리고, 배운 점은 ${learning}이야. 
       내가 너에게 알려준 정보들을 바탕으로 위에서 적은 질문에 대한 답변을 적어줘.
     `

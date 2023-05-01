@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import Link from 'next/link';
 import { ReactElement } from 'react';
+import { useRouter } from 'next/router';
 
 const { Sider } = Layout;
 const { Title } = Typography;
@@ -16,6 +17,7 @@ interface AdmissionLetterLayoutProps {
 }
 
 export default function AdmissionLetterLayout({children}: AdmissionLetterLayoutProps) {
+  const router = useRouter();
 
   const items = [
     {
@@ -35,17 +37,31 @@ export default function AdmissionLetterLayout({children}: AdmissionLetterLayoutP
     }
   ];
 
+  const decideDefaultSelectedKeys = () => {
+    const currentUrl = router.asPath;
+
+    if (currentUrl.includes('first')) {
+      return '1';
+    }
+
+    if (currentUrl.includes('second')) {
+      return '2';
+    }
+
+    return '3';
+  }
+
   return (
-    <Layout style={{width: '100vw', height: '100vh'}}>
+    <Layout style={{ width: '100vw', height: '100vh' }}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
       >
-        <Title level={2} style={{color: '#FFF', textAlign: 'center', padding: '10px 0px 0px 0px'}}>write-now</Title>
+        <Title level={2} style={{ color: '#FFF', textAlign: 'center', padding: '10px 0px 0px 0px' }}>write-now</Title>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={[decideDefaultSelectedKeys()]}
           items={items}
         />
       </Sider>
