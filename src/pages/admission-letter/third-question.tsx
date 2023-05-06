@@ -46,8 +46,14 @@ export default function ThirdQuestion() {
     setIsModalOpen(false);
   };
 
+  const handleClickRefine = () => {
+    const chat = `${editorText} 이 문장을 부드럽게 다듬어줘`;
+
+    setChatMessage(chat);
+  }
+
   // FIX: 이 답변이 마음에 들지 않음.
-  const onFinish = (type: string, value: OnFinishProps) => {
+  const handleFinish = (type: string, value: OnFinishProps) => {
     if ( type === 'motive') {
       const { motive: { university, department, interest, development, reason } } = value;
       const chat = `
@@ -149,7 +155,7 @@ export default function ThirdQuestion() {
               </Radio.Group>
             </Modal>
             {question === '지원 동기' && (
-              <Form name="form_item_path" layout="vertical" onFinish={(value) => onFinish('motive', value)}>
+              <Form name="form_item_path" layout="vertical" onFinish={(value) => handleFinish('motive', value)}>
                 <FormItemGroup prefix={['motive']}>
                   <FormItem name="university" label={<Title level={5}>지원 대학</Title>}>
                     <Input placeholder='서울대학교' required />
@@ -173,7 +179,7 @@ export default function ThirdQuestion() {
               </Form>
             )}
             {question === '진로 계획' && (
-              <Form name="form_item_path" layout="vertical" onFinish={(value) => onFinish('plan', value)}>
+              <Form name="form_item_path" layout="vertical" onFinish={(value) => handleFinish('plan', value)}>
                 <FormItemGroup prefix={['plan']}>
                   <FormItem name="earnings" label={<Title level={5}>대학에서 얻고자 하는 학문적 지식 및 기술적 능력을 적어주세요.</Title>}>
                     <Input placeholder='대학에서는 인공지능, 빅데이터, 사물인터넷 등 다양한 분야에 대한 전문 지식을 쌓고, 프로젝트 경험을 통해 실질적인 업무 능력을 기르고자 합니다.' required />
@@ -192,6 +198,11 @@ export default function ThirdQuestion() {
         <Content style={{ margin: '24px 16px 0 8px' }}>
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, width: 'calc((100vw - 248px) / 2)', height: 'calc(100vh - 110px)' }}>
             <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+            <div style={{display: "flex", flexDirection: "row-reverse", marginTop: "10px"}}>
+              <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
+                문장 다듬기
+              </Button>
+            </div>
           </div>
         </Content>
       </div>

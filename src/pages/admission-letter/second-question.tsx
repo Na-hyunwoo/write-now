@@ -30,7 +30,13 @@ export default function SecondQuestion() {
     setEditorText(value);
   };
 
-  const onFinish = (value: OnFinishProps) => {
+  const handleClickRefine = () => {
+    const chat = `${editorText} 이 문장을 부드럽게 다듬어줘`;
+
+    setChatMessage(chat);
+  }
+
+  const handleFinish = (value: OnFinishProps) => {
     const { second_question: { experience, learning } } = value;
     const chat = `
       대학교에 진학하기 위한 자기소개서를 작성해야 되는데, 질문은 다음과 같아. 
@@ -79,7 +85,7 @@ export default function SecondQuestion() {
             <Title level={4}>
               문항 2. 고등학교 재학 기간 중 타인과 공동체를 위해 노력한 경험과 이를 통해 배운 점을 기술해 주시기 바랍니다. 
             </Title>
-            <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
+            <Form name="form_item_path" layout="vertical" onFinish={handleFinish}>
               <FormItemGroup prefix={['second_question']}>
                 <FormItem name="experience" label={<Title level={5}>타인과 공동체를 위해 노력한 경험</Title>}>
                   <Input placeholder='학생을 가르치는 봉사 동아리에 가입하여 1년간 운영진으로 활동하였음' required />
@@ -97,6 +103,11 @@ export default function SecondQuestion() {
         <Content style={{ margin: '24px 16px 0 8px' }}>
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, width: 'calc((100vw - 248px) / 2)', height: 'calc(100vh - 110px)' }}>
             <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+            <div style={{display: "flex", flexDirection: "row-reverse", marginTop: "10px"}}>
+              <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
+                문장 다듬기
+              </Button>
+            </div>
           </div>
         </Content>
       </div>

@@ -30,7 +30,13 @@ export default function FirstQuestion() {
     setEditorText(value);
   };
 
-  const onFinish = (value: OnFinishProps) => {
+  const handleClickRefine = () => {
+    const chat = `${editorText} 이 문장을 부드럽게 다듬어줘`;
+
+    setChatMessage(chat);
+  }
+
+  const handleFinish = (value: OnFinishProps) => {
     const { first_question: { department, experience, learning } } = value;
     const chat = `
       내가 대학교에 진학하기 위해서 자기소개서를 작성해야 돼. 질문은 다음과 같아. 
@@ -78,7 +84,7 @@ export default function FirstQuestion() {
             <Title level={4}>
               문항 1. 고등학교 재학 기간 중 자신의 진로와 관련하여 어떤 노력을 해왔는지 본인에게 의미 있는 학습 경험과 교내 활동을 중심으로 기술해 주시기 바랍니다.
             </Title>
-            <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
+            <Form name="form_item_path" layout="vertical" onFinish={handleFinish}>
               <FormItemGroup prefix={['first_question']}>
                 <FormItem name="department" label={<Title level={5}>지원 학과</Title>}>
                   <Input placeholder='컴퓨터공학과' required />
@@ -99,6 +105,11 @@ export default function FirstQuestion() {
         <Content style={{ margin: '24px 16px 0 8px' }}>
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, width: 'calc((100vw - 248px) / 2)', height: 'calc(100vh - 110px)' }}>
             <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+            <div style={{display: "flex", flexDirection: "row-reverse", marginTop: "10px"}}>
+              <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
+                문장 다듬기
+              </Button>
+            </div>
           </div>
         </Content>
       </div>
