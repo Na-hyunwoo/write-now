@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { createContext, useContext, useEffect, useMemo, useState, ReactNode  } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode, useRef, MouseEvent  } from 'react';
 
 import { Col, Row, Typography, Layout, theme, Input, Button, Modal, Radio, Form, RadioChangeEvent } from "antd";
 
@@ -8,6 +8,7 @@ import type { FormItemProps } from 'antd';
 import 'react-quill/dist/quill.snow.css';
 import { useGenerateChat } from '@/hooks/useGenerateChat';
 import { useRouter } from 'next/router';
+import Portal from '@/components/Portal';
 
 
 const { Header, Content } = Layout;
@@ -28,6 +29,11 @@ export default function ThirdQuestion() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   const { error, isValidating, mutate } = useGenerateChat(chatMessage);
+
+  const [isEmphasizeVisible, setIsEmphasizeVisible] = useState<boolean>(false);
+  const [emphasizeSentence, setEmphasizeSentence] = useState<string>("");
+  const [mousePosition, setMousePosition] = useState<{x: number, y:number}>({x: 0, y: 0});
+  const editorRef = useRef<HTMLDivElement>(null);
 
   const handleChangeEditor = (value: string) => {
     setEditorText(value);
@@ -83,6 +89,31 @@ export default function ThirdQuestion() {
 
       return;
   };
+
+  const handleMouseUp = (event: MouseEvent) => {
+    const selection = window.getSelection();
+
+    if (!selection || !editorRef.current) {
+      return;
+    }
+
+    if (selection.toString().length > 0 && editorRef.current.contains(selection?.anchorNode)) {
+      setMousePosition({x: event.clientX + 5, y: event.clientY - 30})
+      setIsEmphasizeVisible(true);
+      setEmphasizeSentence(selection.toString());
+      return;
+    }
+
+    setIsEmphasizeVisible(false);
+  }
+
+  const handleClickEmphasize = () => {
+    const chat = `${editorText} 이 자기소개서 글에서, ${emphasizeSentence} 이 부분이 핵심이야. 따라서, 해당 부분을 반복해서 강조해서 자기소개서를 다시 써줘. 
+      실제로 학교에 제출할 수 있게 정돈해서 써줘야돼.`;
+
+    setIsEmphasizeVisible(false);
+    setChatMessage(chat);
+  }
 
   // FIX: 이렇게 하면 동일한 메세지에 대해서 데이터를 호출할 수 없음.
   useEffect(() => {
@@ -197,11 +228,18 @@ export default function ThirdQuestion() {
         </Content>
         <Content style={{ margin: '24px 16px 0 8px' }}>
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, width: 'calc((100vw - 248px) / 2)', height: 'calc(100vh - 110px)' }}>
-            <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+            <div ref={editorRef} onMouseUp={handleMouseUp}>
+              <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
+            </div>
             <div style={{display: "flex", flexDirection: "row-reverse", marginTop: "10px"}}>
               <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
                 문장 다듬기
               </Button>
+              {isEmphasizeVisible && (
+                <Portal selector="root" position={{top: mousePosition.y, left: mousePosition.x}}>
+                  <Button type='primary' size="small" onClick={handleClickEmphasize}>강조하기</Button>
+                </Portal>
+              )}
             </div>
           </div>
         </Content>
