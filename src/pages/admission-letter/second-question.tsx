@@ -9,9 +9,11 @@ import { useGenerateChat } from '@/hooks/useGenerateChat';
 import { useRouter } from 'next/router';
 import Portal from '@/components/Portal';
 
+import striptags from 'striptags';
+
 
 const { Header, Content } = Layout;
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const ReactQuill = dynamic(() => import ('react-quill'), {
   ssr: false
@@ -31,6 +33,12 @@ export default function SecondQuestion() {
   const [emphasizeSentence, setEmphasizeSentence] = useState<string>("");
   const [mousePosition, setMousePosition] = useState<{x: number, y:number}>({x: 0, y: 0});
   const editorRef = useRef<HTMLDivElement>(null);
+
+  const editorTextForCount = striptags(editorText)
+  const noSpaceEditorTextForCount = editorTextForCount.replace(/\s/g, '');
+
+  const textCount = Array.from(editorTextForCount).length;
+  const noSpaceTextCount = Array.from(noSpaceEditorTextForCount).length;
 
   const handleChangeEditor = (value: string) => {
     setEditorText(value);
@@ -133,19 +141,28 @@ export default function SecondQuestion() {
         </Content>
         <Content style={{ margin: '24px 16px 0 8px' }}>
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, width: 'calc((100vw - 248px) / 2)', height: 'calc(100vh - 110px)' }}>
+            {editorText && <Text type="danger">※ 강조하고 싶은 부분을 드래그 해보세요</Text>}
             <div ref={editorRef} onMouseUp={handleMouseUp}>
               <ReactQuill theme="snow" value={editorText} onChange={handleChangeEditor} />
             </div>
-            <div style={{display: "flex", flexDirection: "row-reverse", marginTop: "10px"}}>
+            <div style={{display: "flex", justifyContent: "space-between", marginTop: "10px"}}>
+              <div>
+                <div>
+                  <Text>{`공백 포함: ${textCount}`}</Text>
+                </div>
+                <div>
+                  <Text>{`공백 제외: ${noSpaceTextCount}`}</Text>
+                </div>
+              </div>
               <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
                 문장 다듬기
               </Button>
-              {isEmphasizeVisible && (
+            </div>
+            {isEmphasizeVisible && (
                 <Portal selector="root" position={{top: mousePosition.y, left: mousePosition.x}}>
                   <Button type='primary' size="small" onClick={handleClickEmphasize}>강조하기</Button>
                 </Portal>
               )}
-            </div>
           </div>
         </Content>
       </div>
