@@ -1,15 +1,17 @@
 import dynamic from 'next/dynamic';
-import { createContext, useContext, useEffect, useMemo, useState, ReactNode, useRef, MouseEvent  } from 'react';
+import { createContext, useContext, useMemo, useState, ReactNode, useRef, MouseEvent  } from 'react';
 
+import useSWRMutation from 'swr/mutation';
 import { Layout, Typography, theme, Input, Form, Button } from 'antd';
 import type { FormItemProps } from 'antd';
 
 import 'react-quill/dist/quill.snow.css';
-import { useGenerateChat } from '@/hooks/useGenerateChat';
 import { useRouter } from 'next/router';
 import Portal from '@/components/Portal';
 
 import striptags from 'striptags';
+import { chatEndPoint } from '@/utils/url';
+import { generateChat } from '@/api/chat';
 
 
 const { Header, Content } = Layout;
@@ -25,9 +27,8 @@ export default function SecondQuestion() {
   } = theme.useToken();
 
   const router = useRouter();
-  const [chatMessage, setChatMessage] = useState<string>("");
   const [editorText, setEditorText] = useState<string>("");
-  const { error, isValidating, mutate } = useGenerateChat(chatMessage);
+  const { trigger, isMutating, error } = useSWRMutation(chatEndPoint, generateChat);
 
   const [isEmphasizeVisible, setIsEmphasizeVisible] = useState<boolean>(false);
   const [emphasizeSentence, setEmphasizeSentence] = useState<string>("");
@@ -44,13 +45,20 @@ export default function SecondQuestion() {
     setEditorText(value);
   };
 
-  const handleClickRefine = () => {
+  const handleClickRefine = async () => {
     const chat = `${editorText} 이 문장을 부드럽게 다듬어줘`;
 
-    setChatMessage(chat);
+    const res = await trigger(chat);
+      
+    if (!res) {
+      return;
+    }
+    
+    setEditorText(res);
+
   }
 
-  const handleFinish = (value: OnFinishProps) => {
+  const handleFinish = async (value: OnFinishProps) => {
     const { second_question: { experience, learning } } = value;
     const chat = `
       대학교에 진학하기 위한 자기소개서를 작성해야 되는데, 질문은 다음과 같아. 
@@ -58,8 +66,15 @@ export default function SecondQuestion() {
       이와 관련해서 나는 ${experience}와 같은 경험을 통해 타인과 공동체를 위해 노력한 적이 있어.
       그리고, 배운 점은 ${learning}이야. 
       내가 너에게 알려준 정보들을 바탕으로 위에서 적은 질문에 대한 답변을 적어줘. 
-    `
-    setChatMessage(chat);
+    `;
+
+    const res = await trigger(chat);
+      
+    if (!res) {
+      return;
+    }
+    
+    setEditorText(res);
   };
 
   const handleMouseUp = (event: MouseEvent) => {
@@ -77,35 +92,23 @@ export default function SecondQuestion() {
     }
 
     setIsEmphasizeVisible(false);
-  }
+  };
 
-  const handleClickEmphasize = () => {
+  const handleClickEmphasize = async () => {
     const chat = `${editorText} 이 자기소개서 글에서, ${emphasizeSentence} 이 부분이 핵심이야. 따라서, 해당 부분을 반복해서 강조해서 자기소개서를 다시 써줘. 
       실제로 학교에 제출할 수 있게 정돈해서 써줘야돼.`;
 
     setIsEmphasizeVisible(false);
-    setChatMessage(chat);
-  }
 
-  // FIX: 이렇게 하면 동일한 메세지에 대해서 데이터를 호출할 수 없음.
-  useEffect(() => {
-    if (!chatMessage) {
+    const res = await trigger(chat);
+      
+    if (!res) {
       return;
     }
+    
+    setEditorText(res);
+  };
 
-    const fetchData = async () => {
-      const res = await mutate();
-      
-      if (!res) {
-        return;
-      }
-      
-      setEditorText(res);
-    }
-
-    fetchData();
-
-  }, [chatMessage]);
 
   if (error) {
     router.push('/error');
@@ -133,7 +136,7 @@ export default function SecondQuestion() {
                   <Input placeholder='남을 위해 봉사하는 것이 나에게 큰 행복을 준다는 것을 깨달음' required />
                 </FormItem>
               </FormItemGroup>
-              <Button type="primary" htmlType="submit" loading={isValidating} block>
+              <Button type="primary" htmlType="submit" loading={isMutating} block>
                 자동 생성
               </Button>
             </Form>
@@ -154,7 +157,7 @@ export default function SecondQuestion() {
                   <Text>{`공백 제외: ${noSpaceTextCount}`}</Text>
                 </div>
               </div>
-              <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
+              <Button type="primary" size="small" onClick={handleClickRefine} loading={isMutating}>
                 문장 다듬기
               </Button>
             </div>

@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode, useRef, MouseEvent  } from 'react';
 
+import useSWRMutation from 'swr/mutation';
 import { Col, Row, Typography, Layout, theme, Input, Button, Modal, Radio, Form, RadioChangeEvent } from "antd";
-
 import type { FormItemProps } from 'antd';
 
 import 'react-quill/dist/quill.snow.css';
@@ -11,6 +11,8 @@ import { useRouter } from 'next/router';
 import Portal from '@/components/Portal';
 
 import striptags from 'striptags';
+import { chatEndPoint } from '@/utils/url';
+import { generateChat } from '@/api/chat';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -25,11 +27,10 @@ export default function ThirdQuestion() {
   } = theme.useToken();
 
   const router = useRouter();
-  const [chatMessage, setChatMessage] = useState<string>("");
   const [editorText, setEditorText] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
-  const { error, isValidating, mutate } = useGenerateChat(chatMessage);
+  const { trigger, isMutating, error } = useSWRMutation(chatEndPoint, generateChat);
 
   const [isEmphasizeVisible, setIsEmphasizeVisible] = useState<boolean>(false);
   const [emphasizeSentence, setEmphasizeSentence] = useState<string>("");
@@ -55,18 +56,25 @@ export default function ThirdQuestion() {
   };
 
   const handleChangeRadio = (event: RadioChangeEvent) => {
+    setEditorText("");
     setQuestion(event.target.value);
     setIsModalOpen(false);
   };
 
-  const handleClickRefine = () => {
+  const handleClickRefine = async () => {
     const chat = `${editorText} 이 문장을 부드럽게 다듬어줘`;
 
-    setChatMessage(chat);
-  }
+    const res = await trigger(chat);
+
+    if (!res) {
+      return;
+    }
+
+    setEditorText(res);
+  };
 
   // FIX: 이 답변이 마음에 들지 않음.
-  const handleFinish = (type: string, value: OnFinishProps) => {
+  const handleFinish = async (type: string, value: OnFinishProps) => {
     if ( type === 'motive') {
       const { motive: { university, department, interest, development, reason } } = value;
       const chat = `
@@ -78,10 +86,16 @@ export default function ThirdQuestion() {
         내가 너에게 알려준 정보들을 활용해서 위에서 적은 질문에 대한 답변을 적어줘. 
       `;
 
-      setChatMessage(chat);
+      const res = await trigger(chat);
+
+      if (!res) {
+        return;
+      }
+
+      setEditorText(res);
 
       return;
-    }
+    };
 
     const { plan: { earnings, dream } } = value;
       const chat = `
@@ -92,7 +106,13 @@ export default function ThirdQuestion() {
         내가 너에게 알려준 정보들을 활용해서 위에서 적은 질문에 대한 답변을 적어줘. 
       `;
 
-      setChatMessage(chat);
+      const res = await trigger(chat);
+
+      if (!res) {
+        return;
+      }
+
+      setEditorText(res);
 
       return;
   };
@@ -112,35 +132,22 @@ export default function ThirdQuestion() {
     }
 
     setIsEmphasizeVisible(false);
-  }
+  };
 
-  const handleClickEmphasize = () => {
+  const handleClickEmphasize = async () => {
     const chat = `${editorText} 이 자기소개서 글에서, ${emphasizeSentence} 이 부분이 핵심이야. 따라서, 해당 부분을 반복해서 강조해서 자기소개서를 다시 써줘. 
       실제로 학교에 제출할 수 있게 정돈해서 써줘야돼.`;
 
     setIsEmphasizeVisible(false);
-    setChatMessage(chat);
-  }
 
-  // FIX: 이렇게 하면 동일한 메세지에 대해서 데이터를 호출할 수 없음.
-  useEffect(() => {
-    if (!chatMessage) {
+    const res = await trigger(chat);
+
+    if (!res) {
       return;
     }
 
-    const fetchData = async () => {
-      const res = await mutate();
-      
-      if (!res) {
-        return;
-      }
-      
-      setEditorText(res);
-    }
-
-    fetchData();
-
-  }, [chatMessage]);
+    setEditorText(res);
+  };
 
   if (error) {
     router.push('/error');
@@ -211,7 +218,7 @@ export default function ThirdQuestion() {
                     <Input placeholder='지원하는 대학교는 컴퓨터 공학 분야에서 좋은 커리큘럼을 가지고 있음' required />
                   </FormItem>
                 </FormItemGroup>
-                <Button type="primary" htmlType="submit" loading={isValidating} block>
+                <Button type="primary" htmlType="submit" loading={isMutating} block>
                   자동 생성
                 </Button>
               </Form>
@@ -226,7 +233,7 @@ export default function ThirdQuestion() {
                     <Input placeholder='졸업 후에는 IT 기업에서 소프트웨어 엔지니어로 활동하며, 획기적인 기술 개발에 기여하고 싶습니다. 또한, 차후에는 스타트업을 설립하여 기술 혁신을 이끌어 나가는 창업자가 되고 싶습니다.' required />
                   </FormItem>
                 </FormItemGroup>
-                <Button type="primary" htmlType="submit" loading={isValidating} block>
+                <Button type="primary" htmlType="submit" loading={isMutating} block>
                   자동 생성
                 </Button>
               </Form>
@@ -248,7 +255,7 @@ export default function ThirdQuestion() {
                   <Text>{`공백 제외: ${noSpaceTextCount}`}</Text>
                 </div>
               </div>
-              <Button type="primary" size="small" onClick={handleClickRefine} loading={isValidating}>
+              <Button type="primary" size="small" onClick={handleClickRefine} loading={isMutating}>
                 문장 다듬기
               </Button>
             </div>

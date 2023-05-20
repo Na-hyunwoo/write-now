@@ -3,14 +3,14 @@ import { getTranslate } from './translate';
 
 const api_url = process.env.NEXT_PUBLIC_OPENAI_API_URL as string;
 
-export const generateChat = async(url: string, input: string): Promise<string> => {
+export const generateChat = async(url: string, { arg }: { arg: string }): Promise<string> => {
   const _url = api_url + url;
-  // console.log(_url);
+  
   const response = await axios.post(_url, {
     "model": "gpt-3.5-turbo",
     "messages": [
       {
-        "role": "user", "content": input
+        "role": "user", "content": arg
       },
     ]
   }, {
