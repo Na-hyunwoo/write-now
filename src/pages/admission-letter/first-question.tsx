@@ -1,24 +1,28 @@
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+
 import { createContext, MouseEvent, useContext, useMemo, useRef, useState  } from 'react';
 
 import useSWRMutation from 'swr/mutation';
-import { Layout, Typography, theme, Input, Form, Button } from 'antd';
+
+import { Layout, Typography, theme, Input, Form, Button, Dropdown, MenuProps, Space } from 'antd';
 import type { FormItemProps } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 import 'react-quill/dist/quill.snow.css';
-import { useRouter } from 'next/router';
 import Portal from '@/components/Portal';
 
 import striptags from 'striptags';
 import { generateChat } from '@/api/chat';
 import { chatEndPoint } from '@/utils/url';
+import { getTitle } from '@/utils/function';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 
 const ReactQuill = dynamic(() => import ('react-quill'), {
   ssr: false
-})
+});
 
 export default function FirstQuestion() {
   const {
@@ -26,12 +30,13 @@ export default function FirstQuestion() {
   } = theme.useToken();
 
   const router = useRouter();
-  const [editorText, setEditorText] = useState<string>("");
   const { trigger, isMutating, error } = useSWRMutation(chatEndPoint, generateChat);
 
+  const [editorText, setEditorText] = useState<string>("");
   const [isEmphasizeVisible, setIsEmphasizeVisible] = useState<boolean>(false);
   const [emphasizeSentence, setEmphasizeSentence] = useState<string>("");
   const [mousePosition, setMousePosition] = useState<{x: number, y:number}>({x: 0, y: 0});
+
   const editorRef = useRef<HTMLDivElement>(null);
 
   const editorTextForCount = striptags(editorText)
@@ -39,7 +44,30 @@ export default function FirstQuestion() {
 
   const textCount = Array.from(editorTextForCount).length;
   const noSpaceTextCount = Array.from(noSpaceEditorTextForCount).length;
+  const title = getTitle(router.asPath);
+  
+  const items: MenuProps['items'] = [
+    {
+      label: '진학 자소서',
+      key: '1',
+    },
+    {
+      label: '취업 자소서',
+      key: '2',
+    },
+  ];
 
+  const onClick: MenuProps['onClick'] = ({ key }: { key: string }) => {
+    if (key === '1') {
+      return;
+    }
+
+    if (key === '2') {
+      router.push('/cover-letter');
+      return;
+    }
+  };
+  
   const handleChangeEditor = (value: string) => {
     setEditorText(value);
   };
@@ -115,8 +143,13 @@ export default function FirstQuestion() {
 
   return (
     <Layout>
-      <Header style={{ padding: 0, background: colorBgContainer }}>
-        <Title style={{textAlign: "center", padding: '10px 0px 0px 0px'}}>진학 자소서</Title>
+      <Header style={{ display: "flex", justifyContent: "center", padding: 0, background: colorBgContainer }}>
+        <Dropdown menu={{ items, onClick }}>
+          <Space style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}>
+            <Title style={{textAlign: "center", margin: '0px'}}>{title}</Title>
+            <DownOutlined />
+          </Space>
+        </Dropdown>
       </Header>
       <div style={{display: "flex"}}>
         <Content style={{ margin: '24px 8px 0 16px' }}>

@@ -2,17 +2,18 @@ import dynamic from 'next/dynamic';
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode, useRef, MouseEvent  } from 'react';
 
 import useSWRMutation from 'swr/mutation';
-import { Col, Row, Typography, Layout, theme, Input, Button, Modal, Radio, Form, RadioChangeEvent } from "antd";
+import { Col, Row, Typography, Layout, theme, Input, Button, Modal, Radio, Form, RadioChangeEvent, Dropdown, Space, MenuProps } from "antd";
 import type { FormItemProps } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 import 'react-quill/dist/quill.snow.css';
-import { useGenerateChat } from '@/hooks/useGenerateChat';
 import { useRouter } from 'next/router';
 import Portal from '@/components/Portal';
 
 import striptags from 'striptags';
 import { chatEndPoint } from '@/utils/url';
 import { generateChat } from '@/api/chat';
+import { getTitle } from '@/utils/function';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -42,7 +43,29 @@ export default function ThirdQuestion() {
 
   const textCount = Array.from(editorTextForCount).length;
   const noSpaceTextCount = Array.from(noSpaceEditorTextForCount).length;
+  const title = getTitle(router.asPath);
+  
+  const items: MenuProps['items'] = [
+    {
+      label: '진학 자소서',
+      key: '1',
+    },
+    {
+      label: '취업 자소서',
+      key: '2',
+    },
+  ];
 
+  const onClick: MenuProps['onClick'] = ({ key }: { key: string }) => {
+    if (key === '1') {
+      return;
+    }
+
+    if (key === '2') {
+      router.push('/cover-letter');
+      return;
+    }
+  };
   const handleChangeEditor = (value: string) => {
     setEditorText(value);
   };
@@ -156,8 +179,13 @@ export default function ThirdQuestion() {
 
   return (
     <Layout>
-      <Header style={{ padding: 0, background: colorBgContainer }}>
-        <Title style={{textAlign: "center", padding: '10px 0px 0px 0px'}}>진학 자소서</Title>
+      <Header style={{ display: "flex", justifyContent: "center", padding: 0, background: colorBgContainer }}>
+        <Dropdown menu={{ items, onClick }}>
+          <Space style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}>
+            <Title style={{textAlign: "center", margin: '0px'}}>{title}</Title>
+            <DownOutlined />
+          </Space>
+        </Dropdown>
       </Header>
       <div style={{display: "flex"}}>
         <Content style={{ margin: '24px 8px 0 16px' }}>

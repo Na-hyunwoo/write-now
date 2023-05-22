@@ -2,10 +2,13 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { ChangeEvent, useState } from "react";
 
-import { Col, Row, Typography, Select, Divider, Space, Input, Button, Modal, Radio, RadioChangeEvent, Form, Card } from "antd";
+import { Col, Row, Typography, Select, Divider, Space, Input, Button, Modal, Radio, RadioChangeEvent, Form, Card, Dropdown, MenuProps, theme } from "antd";
+import { DownOutlined } from '@ant-design/icons';
 
 import { useGenerateChat } from "@/hooks/useGenerateChat";
 import 'react-quill/dist/quill.snow.css';
+import { Header } from "antd/es/layout/layout";
+import { getTitle } from "@/utils/function";
 
 const { Title, Text } = Typography;
 
@@ -22,6 +25,10 @@ interface IInformation {
 }
 
 export default function CoverLetters() {
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
   const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -48,8 +55,33 @@ export default function CoverLetters() {
     성격은 ${information.personality.join(", ")}라는 성향을 가지고 있어. 
     이번에 ${information.position}라는 직무를 갖기 위해서, ${information.question}이라는 기업 자기소개서의 질문에 답해야 해.
     따라서, 질문에 걸맞는 기업 자기소개서를 작성해줘`;
+  const title = getTitle(router.asPath);
+
 
   const { error, isValidating, mutate } = useGenerateChat(chatMessage);
+
+  const items: MenuProps['items'] = [
+    {
+      label: '진학 자소서',
+      key: '1',
+    },
+    {
+      label: '취업 자소서',
+      key: '2',
+    },
+  ];
+
+  const onClick: MenuProps['onClick'] = ({ key }: { key: string }) => {
+    if (key === '1') {
+      router.push('/admission-letter/first-question');
+      return;
+    }
+
+    if (key === '2') {
+      router.push('/cover-letter');
+      return;
+    }
+  };
 
   const handleTendencyChange = (value: any) => {
     if (value === '내향형(I)' || value === '외향형(E)') {
@@ -157,6 +189,14 @@ export default function CoverLetters() {
 
   return (
     <>
+      <Header style={{ display: "flex", justifyContent: "center", padding: 0, background: colorBgContainer }}>
+        <Dropdown menu={{ items, onClick }}>
+          <Space style={{ cursor: "pointer", display: "inline-flex", alignItems: "center" }}>
+            <Title style={{textAlign: "center", margin: '0px'}}>{title}</Title>
+            <DownOutlined />
+          </Space>
+        </Dropdown>
+      </Header>
       <Row style={{paddingTop: "20px"}}>
         <Col style={{display: "flex", flexDirection: "column", alignItems: "center" }} span={8}>
           <Title level={3}>01. 개인 성향</Title>
