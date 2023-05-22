@@ -46,7 +46,7 @@ export default function SecondQuestion() {
   };
 
   const handleClickRefine = async () => {
-    const chat = `${editorText} 이 문장을 부드럽게 다듬어줘`;
+    const chat = `${editorText} 이 글이 자연스럽게 읽히도록 다시 써줘`;
 
     const res = await trigger(chat);
       
@@ -55,8 +55,7 @@ export default function SecondQuestion() {
     }
     
     setEditorText(res);
-
-  }
+  };
 
   const handleFinish = async (value: OnFinishProps) => {
     const { second_question: { experience, learning } } = value;
