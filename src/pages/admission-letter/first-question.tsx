@@ -31,6 +31,7 @@ export default function FirstQuestion() {
 
   const router = useRouter();
   const { trigger, isMutating, error } = useSWRMutation(chatEndPoint, generateChat);
+  const [form] = Form.useForm();
 
   const [editorText, setEditorText] = useState<string>("");
   const [isEmphasizeVisible, setIsEmphasizeVisible] = useState<boolean>(false);
@@ -85,7 +86,7 @@ export default function FirstQuestion() {
   };
 
   const handleFinish = async (value: OnFinishProps) => {
-    const { first_question: { department, experience, learning } } = value;
+    const { department, experience, learning } = value;
     const chat = `
       내가 대학교에 진학하기 위해서 자기소개서를 작성해야 돼. 질문은 다음과 같아. 
       고등학교 재학 기간 중 자신의 진로와 관련하려 어떤 노력을 해왔는지 본인에게 의미 있는 학습 경험과 교내 활동을 중심으로 기술해 주시기 바랍니다. 
@@ -135,6 +136,17 @@ export default function FirstQuestion() {
     setEditorText(res);
   };
 
+  const handleClickExample = () => {
+    form.setFieldsValue({ 
+      department: '컴퓨터공학과', 
+      experience: 'IT 창업 동아리를 만들고, 1년동안 운영자로 활동하였음', 
+      learning: "조직을 이룸을 통해, 혼자서는 이뤄낼 수 없는 성과를 이뤄낼 수 있었음",
+    });
+  };
+
+  const handleClickDeleteAll = () => {
+    form.resetFields();
+  };
 
   if (error) {
     router.push('/error');
@@ -158,22 +170,26 @@ export default function FirstQuestion() {
             <Title level={4}>
               문항 1. 고등학교 재학 기간 중 자신의 진로와 관련하여 어떤 노력을 해왔는지 본인에게 의미 있는 학습 경험과 교내 활동을 중심으로 기술해 주시기 바랍니다.
             </Title>
-            <Form name="form_item_path" layout="vertical" onFinish={handleFinish}>
-              <FormItemGroup prefix={['first_question']}>
-                <FormItem name="department" label={<Title level={5}>지원 학과</Title>}>
-                  <Input placeholder='컴퓨터공학과' required />
-                </FormItem>
-                <FormItem name="experience" label={<Title level={5}>진로와 관련된 학습 경험 혹은 교내 활동</Title>}>
-                  <Input placeholder='IT 창업 동아리를 만들고, 1년동안 운영자로 활동하였음' required />
-                </FormItem>
-                <FormItem name="learning" label={<Title level={5}>배운 점</Title>}>
-                  <Input placeholder='조직을 이룸을 통해, 혼자서는 이뤄낼 수 없는 성과를 이뤄낼 수 있었음' required />
-                </FormItem>
-              </FormItemGroup>
-              <Button type="primary" htmlType="submit" loading={isMutating} block>
-                자동 생성
-              </Button>
-            </Form>
+              <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFinish} style={{ position: "relative" }}>
+                <div style={{ display: "flex", position: "absolute", right: 0, gap: "5px", zIndex: 1 }}>
+                  <Button size="small" onClick={handleClickExample}>예시 텍스트</Button>
+                  <Button size="small" onClick={handleClickDeleteAll}>전체 지우기</Button>
+                </div>
+                <FormItemGroup prefix={['first_question']}>
+                  <Form.Item name="department" label={<Title level={5}>지원 학과</Title>}>
+                    <Input placeholder='컴퓨터공학과' required />
+                  </Form.Item>
+                  <Form.Item name="experience" label={<Title level={5}>진로와 관련된 학습 경험 혹은 교내 활동</Title>}>
+                    <Input placeholder='IT 창업 동아리를 만들고, 1년동안 운영자로 활동하였음' required />
+                  </Form.Item>
+                  <Form.Item name="learning" label={<Title level={5}>배운 점</Title>}>
+                    <Input placeholder='조직을 이룸을 통해, 혼자서는 이뤄낼 수 없는 성과를 이뤄낼 수 있었음' required />
+                  </Form.Item>
+                </FormItemGroup>
+                <Button type="primary" htmlType="submit" loading={isMutating} block>
+                  자동 생성
+                </Button>
+              </Form>
           </div>
         </Content>
         <Content style={{ margin: '24px 16px 0 8px' }}>
@@ -208,11 +224,9 @@ export default function FirstQuestion() {
 }
 
 interface OnFinishProps {
-  first_question: {
-    department: string, 
-    experience: string, 
-    learning: string
-  }
+  department: string, 
+  experience: string, 
+  learning: string
 }
 
 const MyFormItemContext = createContext<(string | number)[]>([]);

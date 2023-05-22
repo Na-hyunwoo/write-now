@@ -31,6 +31,7 @@ export default function SecondQuestion() {
   const router = useRouter();
   const [editorText, setEditorText] = useState<string>("");
   const { trigger, isMutating, error } = useSWRMutation(chatEndPoint, generateChat);
+  const [form] = Form.useForm();
 
   const [isEmphasizeVisible, setIsEmphasizeVisible] = useState<boolean>(false);
   const [emphasizeSentence, setEmphasizeSentence] = useState<string>("");
@@ -83,7 +84,7 @@ export default function SecondQuestion() {
   };
 
   const handleFinish = async (value: OnFinishProps) => {
-    const { second_question: { experience, learning } } = value;
+    const { experience, learning } = value;
     const chat = `
       대학교에 진학하기 위한 자기소개서를 작성해야 되는데, 질문은 다음과 같아. 
       고등학교 재학 기간 중 타인과 공동체를 위해 노력한 경험과 이를 통해 배운 점을 기술해 주시기 바랍니다.
@@ -133,6 +134,17 @@ export default function SecondQuestion() {
     setEditorText(res);
   };
 
+  const handleClickExample = () => {
+    form.setFieldsValue({ 
+      experience: '타인과 공동체를 위해 노력한 경험', 
+      learning: '남을 위해 봉사하는 것이 나에게 큰 행복을 준다는 것을 깨달음',
+    });
+  };
+
+  const handleClickDeleteAll = () => {
+    form.resetFields();
+  };
+
 
   if (error) {
     router.push('/error');
@@ -156,14 +168,18 @@ export default function SecondQuestion() {
             <Title level={4}>
               문항 2. 고등학교 재학 기간 중 타인과 공동체를 위해 노력한 경험과 이를 통해 배운 점을 기술해 주시기 바랍니다. 
             </Title>
-            <Form name="form_item_path" layout="vertical" onFinish={handleFinish}>
+            <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFinish} style={{ position: "relative" }}>
+              <div style={{ display: "flex", position: "absolute", right: 0, gap: "5px", zIndex: 1 }}>
+                <Button size="small" onClick={handleClickExample}>예시 텍스트</Button>
+                <Button size="small" onClick={handleClickDeleteAll}>전체 지우기</Button>
+              </div>
               <FormItemGroup prefix={['second_question']}>
-                <FormItem name="experience" label={<Title level={5}>타인과 공동체를 위해 노력한 경험</Title>}>
+                <Form.Item name="experience" label={<Title level={5}>타인과 공동체를 위해 노력한 경험</Title>}>
                   <Input placeholder='학생을 가르치는 봉사 동아리에 가입하여 1년간 운영진으로 활동하였음' required />
-                </FormItem>
-                <FormItem name="learning" label={<Title level={5}>배운 점</Title>}>
+                </Form.Item>
+                <Form.Item name="learning" label={<Title level={5}>배운 점</Title>}>
                   <Input placeholder='남을 위해 봉사하는 것이 나에게 큰 행복을 준다는 것을 깨달음' required />
-                </FormItem>
+                </Form.Item>
               </FormItemGroup>
               <Button type="primary" htmlType="submit" loading={isMutating} block>
                 자동 생성
@@ -203,10 +219,8 @@ export default function SecondQuestion() {
 }
 
 interface OnFinishProps {
-  second_question: {
-    experience: string, 
-    learning: string
-  }
+  experience: string, 
+  learning: string
 }
 
 const MyFormItemContext = createContext<(string | number)[]>([]);
