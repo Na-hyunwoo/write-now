@@ -1,4 +1,3 @@
-
 import { Layout, Typography, Menu } from 'antd';
 import {
   TeamOutlined,
