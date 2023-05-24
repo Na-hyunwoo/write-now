@@ -5,10 +5,13 @@ import { ChangeEvent, useState } from "react";
 import { Col, Row, Typography, Select, Divider, Space, Input, Button, Modal, Radio, RadioChangeEvent, Form, Card, Dropdown, MenuProps, theme } from "antd";
 import { DownOutlined } from '@ant-design/icons';
 
-import { useGenerateChat } from "@/hooks/useGenerateChat";
+import useSWRMutation from 'swr/mutation';
+
 import 'react-quill/dist/quill.snow.css';
 import { Header } from "antd/es/layout/layout";
 import { getTitle } from "@/utils/function";
+import { chatEndPoint } from "@/utils/url";
+import { generateChat } from "@/api/chat";
 
 const { Title, Text } = Typography;
 
@@ -58,7 +61,8 @@ export default function CoverLetters() {
   const title = getTitle(router.asPath);
 
 
-  const { error, isValidating, mutate } = useGenerateChat(chatMessage);
+  const { trigger, isMutating, error } = useSWRMutation(chatEndPoint, generateChat);
+
 
   const items: MenuProps['items'] = [
     {
@@ -171,7 +175,7 @@ export default function CoverLetters() {
   };
 
   const handleSubmit = async () => {
-    const res = await mutate();
+    const res = await trigger(chatMessage);
 
     if (res) {
       setEditorText(res);
@@ -388,7 +392,7 @@ export default function CoverLetters() {
           style={{width: "457px", height: "63px", display: "flex", alignItems: "center", justifyContent: "center"}}
           onClick={handleSubmit}
           disabled={!Object.values(information).every((item) => item.length > 0)}
-          loading={isValidating}
+          loading={isMutating}
         >
           <Title level={2} style={{fontStyle: "#FFF", margin: 0}}>
             자기소개서 작성하기
