@@ -2,18 +2,18 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { ChangeEvent, useState } from "react";
 
-import { Col, Row, Typography, Select, Divider, Space, Input, Button, Modal, Radio, RadioChangeEvent, Form, Card, Dropdown, MenuProps, theme } from "antd";
+import { Col, Row, Typography, Select, Divider, Space, Input, Button, Modal, Radio, RadioChangeEvent, Form, Dropdown, MenuProps, theme, Layout } from "antd";
 import { DownOutlined } from '@ant-design/icons';
 
 import useSWRMutation from 'swr/mutation';
 
 import 'react-quill/dist/quill.snow.css';
-import { Header } from "antd/es/layout/layout";
 import { getTitle } from "@/utils/function";
 import { chatEndPoint } from "@/utils/url";
 import { generateChat } from "@/api/chat";
 
 const { Title, Text } = Typography;
+const { Header } = Layout;
 
 const ReactQuill = dynamic(() => import ('react-quill'), {
   ssr: false
