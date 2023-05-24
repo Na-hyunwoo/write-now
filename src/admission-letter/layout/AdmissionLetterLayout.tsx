@@ -2,7 +2,7 @@
 import { Layout, Typography, Menu } from 'antd';
 import {
   TeamOutlined,
-  ReadOutlined,
+  FieldTimeOutlined,
   DingdingOutlined
 } from '@ant-design/icons';
 import Link from 'next/link';
@@ -22,7 +22,7 @@ export default function AdmissionLetterLayout({children}: AdmissionLetterLayoutP
   const items = [
     {
       key: '1',
-      icon: <ReadOutlined />,
+      icon: <FieldTimeOutlined />,
       label: <Link href='first-question'>문항 1</Link>,
     },
     {
