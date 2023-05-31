@@ -136,7 +136,7 @@ export default function SecondQuestion() {
 
   const handleClickExample = () => {
     form.setFieldsValue({ 
-      experience: '타인과 공동체를 위해 노력한 경험', 
+      experience: '학생을 가르치는 봉사 동아리에 가입하여 1년간 운영진으로 활동하였음', 
       learning: '남을 위해 봉사하는 것이 나에게 큰 행복을 준다는 것을 깨달음',
     });
   };
