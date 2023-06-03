@@ -2,9 +2,9 @@ import dynamic from 'next/dynamic';
 import { createContext, useContext, useEffect, useMemo, useState, ReactNode, useRef, MouseEvent  } from 'react';
 
 import useSWRMutation from 'swr/mutation';
-import { Col, Row, Typography, Layout, theme, Input, Button, Modal, Radio, Form, RadioChangeEvent, Dropdown, Space, MenuProps } from "antd";
+import { Col, Row, Typography, Layout, theme, Input, Button, Modal, Radio, Form, RadioChangeEvent, Dropdown, Space, MenuProps, Tooltip } from "antd";
 import type { FormItemProps } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 import 'react-quill/dist/quill.snow.css';
 import { useRouter } from 'next/router';
@@ -364,10 +364,22 @@ export default function ThirdQuestion() {
                   <Form.Item name="interest" label={<Title level={5}>해당 학과에 관심을 갖게한 개인적 경험 또는 성장 과정</Title>}>
                     <Input placeholder='중학교 시절, 우연히 참여한 프로그래밍 동아리에서 컴퓨터 언어를 학습하게 되었음.' required />
                   </Form.Item>
-                  <Form.Item name="development" label={<Title level={5}>지원하는 학과에 대한 관심과 열정이 발전된 과정</Title>}>
+                  <Form.Item name="development" label={<Title level={5}>지원하는 학과에 대한 열정이 발전된 과정</Title>}>
                     <Input placeholder='중학교와 고등학교 때 IT 관련 동아리에 참여하며 다양한 프로젝트를 진행' required />
                   </Form.Item>
-                  <Form.Item name="reason" label={<Title level={5}>지원하는 대학교의 선택의 이유</Title>}>
+                  <Form.Item 
+                    name="reason" 
+                    label={
+                      <div style={{position: "relative"}}>
+                        <Title level={5}>
+                          지원하는 대학교의 선택의 이유
+                        </Title>
+                        <Tooltip title="지원하고자 하는 대학교의 특장점과 명성에 대해 언급하며 해당 학교에 대한 관심도를 나타내는게 중요해요 !" >
+                          <QuestionCircleOutlined style={{position: "absolute", left: "200px", top: "5px"}} />
+                        </Tooltip>
+                      </div>
+                    }
+                  >
                     <Input placeholder='지원하는 대학교는 컴퓨터 공학 분야에서 좋은 커리큘럼을 가지고 있음' required />
                   </Form.Item>
                 </FormItemGroup>
@@ -379,7 +391,16 @@ export default function ThirdQuestion() {
             {question === '진로 계획' && (
               <Form form={careerPlanForm} name="form_item_path" layout="vertical" onFinish={(value) => handleFinish('careerPlan', value)}>
                 <FormItemGroup prefix={['careerPlan']}>
-                  <Form.Item name="earnings" label={<Title level={5}>대학에서 얻고자 하는 학문적 지식 및 기술적 능력</Title>}>
+                  <Form.Item 
+                    name="earnings"
+                    label={
+                      <div style={{position: "relative"}}>
+                        <Title level={5}>대학에서 얻고자 하는 학문적 지식 및 기술적 능력</Title>
+                        <Tooltip title="대학에서 어떤 지식이나 능력을 습득하고 싶은지에 대해 구체적으로 적을수록 좋아요!" >
+                          <QuestionCircleOutlined style={{position: "absolute", left: "310px", top: "5px"}} />
+                        </Tooltip>
+                      </div>
+                    }>
                     <Input placeholder='인공지능, 빅데이터, 사물인터넷 등 다양한 분야에 대한 전문 지식과, 프로젝트 경험을 통해 실질적인 업무 능력' required />
                   </Form.Item>
                   <Form.Item name="dream" label={<Title level={5}>자신의 장래희망과, 그것을 이루기 위한 계획</Title>}>
@@ -397,10 +418,28 @@ export default function ThirdQuestion() {
                   <Form.Item name="interest" label={<Title level={5}>해당 학과에 대한 관심을 가지게 된 경험, 동기, 또는 이유</Title>}>
                     <Input placeholder='어렸을 때 우연히 접한 컴퓨터 게임을 더 전문적으로 하고 싶어 컴퓨터에 대해 공부하기 시작함' required />
                   </Form.Item>
-                  <Form.Item name="experience" label={<Title level={5}>해당 학과에 진학하기 위한 경험과 학습 활동</Title>}>
+                  <Form.Item 
+                    name="experience"
+                    label={
+                      <div style={{position: "relative"}}>
+                        <Title level={5}>해당 학과에 진학하기 위해 노력한 경험과 학습 활동</Title>
+                        <Tooltip title="대학과정 이전의 고등학교에서의 수업, 프로젝트, 동아리 활동, 봉사활동, 자발적인 학습 등을 적으면 좋아요 !" >
+                          <QuestionCircleOutlined style={{position: "absolute", left: "325px", top: "5px"}} />
+                        </Tooltip>
+                      </div>
+                    }>
                     <Input placeholder='게임을 커스텀하기 위해 처음부터 만든적이 있음. 사람들이 게임을 즐기는 모습을 보면서, 다른이들에게 재미를 주는 것이 굉장히 큰 행복을 준다는 것을 느낌' required />
                   </Form.Item>
-                  <Form.Item name="plan" label={<Title level={5}>어떤 자기계발 계획이 있는지 적어주세요.</Title>}>
+                  <Form.Item 
+                    name="plan" 
+                    label={
+                      <div style={{position: "relative"}}>
+                        <Title level={5}>어떤 자기계발 계획이 있는지 적어주세요.</Title>
+                        <Tooltip title="자신의 열린 태도와 지속적인 성장을 표현하기 위해, 어떤 자기계발 계획이 있는지 언급해주세요. 예를 들어, 추가적인 학습 계획, 학회 참여, 연구 프로젝트에 참여 등을 적으면 좋아요 !" >
+                          <QuestionCircleOutlined style={{position: "absolute", left: "260px", top: "5px"}} />
+                        </Tooltip>
+                      </div>
+                    }>
                     <Input placeholder='게임에만 국한되지 않고 소프트웨어를 통해 사람들에게 좋은 가치를 줄 수 있는 일이라면 무엇이든지 도전하며 사람들에게 긍정적인 가치를 제공하는 개발자가 되고싶음' required />
                   </Form.Item>
                 </FormItemGroup>
@@ -415,7 +454,16 @@ export default function ThirdQuestion() {
                   <Form.Item name="major" label={<Title level={5}>학문적 기반을 탄탄히 다지기 위해 하고싶은 전공 과목과 교육 경험</Title>}>
                     <Input placeholder='네트워크, 알고리즘, 운영체제, 데이터베이스와 같은 컴퓨터 공학의 핵심이 되는 과목들을 통해 컴퓨터 공학과 관련된 기반을 탄탄히 다질 계획' required />
                   </Form.Item>
-                  <Form.Item name="practice" label={<Title level={5}>실무 능력을 키우고자 하는 계획</Title>}>
+                  <Form.Item 
+                    name="practice" 
+                    label={
+                      <div style={{position: "relative"}}>
+                        <Title level={5}>실무 능력을 키우고자 하는 계획</Title>
+                        <Tooltip title="산업체와의 협업 프로젝트, 학과 또는 학회에서 제공하는 인턴십 기회 등을 활용하여 실제 현장에서의 문제 해결과 창의적인 아이디어를 발전시키는 데에 주력할 것임을 강조해주세요!" >
+                          <QuestionCircleOutlined style={{position: "absolute", left: "200px", top: "5px"}} />
+                        </Tooltip>
+                      </div>
+                    }>
                     <Input placeholder='캡스톤 디자인과 같은 실전 프로젝트를 만들 수 있는 과목을 통해 실무 능력 향상 기대' required />
                   </Form.Item>
                   <Form.Item name="research" label={<Title level={5}>학문적인 성장을 이루고자 하는 계획</Title>}>
